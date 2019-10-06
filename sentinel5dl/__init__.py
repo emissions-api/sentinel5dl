@@ -8,6 +8,7 @@ Sentinel-5p Downloader
 :license: MIT
 '''
 
+import hashlib
 import io
 import json
 import os.path
@@ -19,6 +20,21 @@ import urllib.parse
 API = 'https://s5phub.copernicus.eu/dhus/'
 USER = 's5pguest'
 PASS = 's5pguest'
+
+
+def __md5(filename):
+    '''Generate the md5 sum of a file
+
+    :param filename: input filename for which the md5 sum is generated.
+    :type filename: str
+    :returns: hex representation of the md5 sum with uppercase characters.
+    :rtype: str
+    '''
+    hash_md5 = hashlib.md5()
+    with open(filename, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest().upper()
 
 
 def __http_request(path, headers=[], **post_data):
@@ -181,4 +197,23 @@ def download(products, output_dir='.', logger_fn=None):
         if logger_fn:
             logger_fn(f'Downloading {uuid} to {filename}')
         path = f'/odata/v1/Products(\'{uuid}\')/$value'
+
+        # Check if file exist
+        if os.path.exists(filename):
+            # Get md5 sum
+            md5um_path = \
+                f'/odata/v1/Products(\'{uuid}\')/Checksum/Value/$value'
+            md5sum, _ = __http_request(md5um_path)
+            md5sum = md5sum.decode()
+
+            # Compare md5 sum
+            if __md5(filename) == md5sum:
+                if logger_fn:
+                    logger_fn(f'Skipping {filename} since it already exist.')
+                continue
+            if logger_fn:
+                logger_fn(
+                    f'Overriding {filename} since md5 hash differs.')
+
+        # Download file
         __http_download(path, filename)

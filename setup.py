@@ -8,6 +8,11 @@ setup(
     license='MIT',
     url='https://github.com/emissions-api/sentinel5dl',
     packages=find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],    
     install_requires=open('requirements.txt').read().splitlines(),
     long_description=open('readme.md').read(),
     entry_points={

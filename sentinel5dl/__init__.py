@@ -169,7 +169,7 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
 def download(products, output_dir='.', logger_fn=None):
     '''Download a set of products via API.
 
-    :param products: List with product information (e.g. retrieved via search). 
+    :param products: List with product information (e.g. retrieved via search).
                      The list needs to contain dictionaries which must at least
                      have the fields `uuid` and `identifier`.
     :param output_dir: Directory to which the files will be downloaded.

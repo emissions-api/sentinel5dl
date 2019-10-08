@@ -11,9 +11,18 @@ Welcome to Sentinel-5P Downloader's documentation!
    :caption: Contents:
 
 
+Python API
+----------
+
+.. automodule:: sentinel5dl
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -38,83 +38,44 @@ def __md5(filename):
     return hash_md5.hexdigest().upper()
 
 
-def __http_request(path, headers=[], **post_data):
+def __http_request(path):
     '''Make an HTTP request to a given URL with optional parameters.
 
     :param path: Request path relative to the base API
-    :param headers: Request headers to send (e.g. cookies)
-    :param post_data: Data to send as HTTP POST request
-    :returns: Tuple containing response body and list of response headers
+    :returns: The response body
     '''
     buf = io.BytesIO()
-    response_headers = []
     curl = pycurl.Curl()
     url = API + path.lstrip('/')
     curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
-    if headers:
-        curl.setopt(curl.HTTPHEADER, headers)
-    if post_data:
-        post_fields = urllib.parse.urlencode(post_data)
-        curl.setopt(curl.POSTFIELDS, post_fields)
     curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
     curl.setopt(curl.WRITEFUNCTION, buf.write)
-    curl.setopt(curl.HEADERFUNCTION, response_headers.append)
     curl.setopt(curl.FAILONERROR, True)
     curl.perform()
     curl.close()
     result = buf.getvalue()
     buf.close()
-    return result, response_headers
+    return result
 
 
-def __http_download(path, filename, headers=[]):
+def __http_download(path, filename):
     '''Download a file from the API via HTTP.
 
     :param path: Request path relative to the base API
     :param filename: Output file name. Note that this file will be overwritten
                      if it already exists.
-    :param headers: Request headers to send (e.g. cookies)
     '''
     with open(filename, 'wb') as f:
         curl = pycurl.Curl()
         url = API + path.lstrip('/')
         curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
-        if headers:
-            curl.setopt(curl.HTTPHEADER, headers)
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
         curl.perform()
         curl.close()
-
-
-def _login():
-    '''Login to retrieve a session cookie.
-
-    :returns: Session cookie.
-    '''
-    _, headers = __http_request('/login', login_username=USER,
-                                login_password=PASS)
-    cookies = []
-    for header in headers:
-        header_line = header.decode('ascii', 'ignore')
-        if header_line.lower().startswith('set-cookie:'):
-            value = header_line.split(':', 1)[1]
-            cookies.extend([c.strip() for c in value.split(';')])
-    return 'Cookie: ' + '; '.join(set(cookies))
-
-
-def _user(cookies):
-    '''Request user information.
-
-    :param cookies: Session cookie to use for request.
-    :returns: Dictionary containing user information.
-    '''
-    path = f'/odata/v1/Users(\'{USER}\')?$format=json&$expand=SystemRoles'
-    body, _ = __http_request(path, [cookies])
-    return json.loads(body.decode('utf8')).get('d')
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
@@ -148,7 +109,7 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
                                    quote_via=urllib.parse.quote)
     path = '/api/stub/products?' + query
     logger.debug(f'Requesting {path}')
-    body, _ = __http_request(path)
+    body = __http_request(path)
     return json.loads(body.decode('utf8'))
 
 
@@ -202,7 +163,7 @@ def download(products, output_dir='.'):
             # Get md5 sum
             md5um_path = \
                 f'/odata/v1/Products(\'{uuid}\')/Checksum/Value/$value'
-            md5sum, _ = __http_request(md5um_path)
+            md5sum = __http_request(md5um_path)
             md5sum = md5sum.decode()
 
             # Compare md5 sum

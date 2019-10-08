@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-'''
-Sentinel-5p Downloader
-~~~~~~~~~~~~~~~~~~~~~~
-
-:copyright: 2019, The Emissions API Developers
-:url: https://emissions-api.org
-:license: MIT
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
+'''Sentinel-5P Downloader
 '''
 
 import hashlib

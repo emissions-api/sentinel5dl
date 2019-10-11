@@ -125,3 +125,7 @@ dmypy.json
 .pyre/
 
 .vscode
+*.swp
+
+# Download artifacts
+*.nc

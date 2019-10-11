@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sentinel5dl',
-    version='0.3',
+    version='0.4',
     description='Sentinel-5p Downloader',
     author='Emissions API Developers',
     license='MIT',

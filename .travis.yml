@@ -23,10 +23,14 @@ after_success:
   - touch docs/build/html/.nojekyll # create this file to prevent Github's Jekyll processing
 
 deploy:
- provider: pages
- skip_cleanup: true
- github_token: $GITHUB_TOKEN
- local_dir: docs/build/html
- on:
-   branch: master
-   python: "3.6"
+  provider: pages
+  fqdn: sentinel5dl.emissions-api.org
+  verbose: true
+  keep_history: true
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: docs/build/html
+  on:
+    branch: master
+    python: "3.6"
+    repo: emissions-api/sentinel5dl

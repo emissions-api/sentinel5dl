@@ -12,12 +12,15 @@ import json
 import os.path
 import pycurl
 import urllib.parse
+import logging
 
 
 # Data publically provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
 USER = 's5pguest'
 PASS = 's5pguest'
+
+logger = logging.getLogger(__name__)
 
 
 def __md5(filename):
@@ -115,7 +118,7 @@ def _user(cookies):
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
-            limit, logger_fn=None):
+            limit):
     '''Make a single search request for products to the API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
@@ -125,7 +128,6 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
     :param processing_level: Data processing level (`L1B` or `L2`)
     :param offset: Offset for the results to return
     :param limit: Limit number of results
-    :param logger_fn: Function used for logging
     :returns: Dictionary containing information about found products
     '''
     filter_query = ['platformname:Sentinel-5']
@@ -145,14 +147,13 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
     query = urllib.parse.urlencode(query, safe='():,\\[]',
                                    quote_via=urllib.parse.quote)
     path = '/api/stub/products?' + query
-    if logger_fn:
-        logger_fn(f'Requesting {path}')
+    logger.debug(f'Requesting {path}')
     body, _ = __http_request(path)
     return json.loads(body.decode('utf8'))
 
 
 def search(polygon=None, begin_ts=None, end_ts=None, product=None,
-           processing_level='L2', per_request_limit=25, logger_fn=None):
+           processing_level='L2', per_request_limit=25):
     '''Search for products via API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
@@ -161,15 +162,15 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     :param product: Type of product to request
     :param processing_level: Data processing level (`L1B` or `L2`)
     :param per_request_limit: Limit number of results per request
-    :param logger_fn: Function used for logging
     :returns: Dictionary containing information about found products
     '''
     count = 0
     total = 1
     data = None
+    logger.info('Searching for Sentinel-5 products')
     while count < total:
         s = _search(polygon, begin_ts, end_ts, product, processing_level,
-                    count, per_request_limit, logger_fn)
+                    count, per_request_limit)
         total = s.get('totalresults', 0)
         if data:
             data['products'].extend(s['products'])
@@ -177,23 +178,23 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
         else:
             data = s
         count = len(data['products'])
+        logger.debug(f'Received {count} of {total} data sets')
+    logger.info('Found {0} products'.format(len(data.get('products', []))))
     return data
 
 
-def download(products, output_dir='.', logger_fn=None):
+def download(products, output_dir='.'):
     '''Download a set of products via API.
 
     :param products: List with product information (e.g. retrieved via search).
                      The list needs to contain dictionaries which must at least
                      have the fields `uuid` and `identifier`.
     :param output_dir: Directory to which the files will be downloaded.
-    :param logger_fn: Function used for logging.
     '''
     for product in products:
         uuid = product['uuid']
         filename = os.path.join(output_dir, product['identifier'] + '.nc')
-        if logger_fn:
-            logger_fn(f'Downloading {uuid} to {filename}')
+        logger.info(f'Downloading {uuid} to {filename}')
         path = f'/odata/v1/Products(\'{uuid}\')/$value'
 
         # Check if file exist
@@ -206,12 +207,9 @@ def download(products, output_dir='.', logger_fn=None):
 
             # Compare md5 sum
             if __md5(filename) == md5sum:
-                if logger_fn:
-                    logger_fn(f'Skipping {filename} since it already exist.')
+                logger.info(f'Skipping {filename} since it already exist.')
                 continue
-            if logger_fn:
-                logger_fn(
-                    f'Overriding {filename} since md5 hash differs.')
+            logger.info(f'Overriding {filename} since md5 hash differs.')
 
         # Download file
         __http_download(path, filename)

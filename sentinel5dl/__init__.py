@@ -47,6 +47,7 @@ def __http_request(path):
     buf = io.BytesIO()
     curl = pycurl.Curl()
     url = API + path.lstrip('/')
+    logger.debug(f'Requesting {url}')
     curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
     curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
@@ -69,6 +70,7 @@ def __http_download(path, filename):
     with open(filename, 'wb') as f:
         curl = pycurl.Curl()
         url = API + path.lstrip('/')
+        logger.debug(f'Requesting {url} for download')
         curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
@@ -108,7 +110,6 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
     query = urllib.parse.urlencode(query, safe='():,\\[]',
                                    quote_via=urllib.parse.quote)
     path = '/api/stub/products?' + query
-    logger.debug(f'Requesting {path}')
     body = __http_request(path)
     return json.loads(body.decode('utf8'))
 
@@ -161,8 +162,7 @@ def download(products, output_dir='.'):
         # Check if file exist
         if os.path.exists(filename):
             # Get md5 sum
-            md5um_path = \
-                f'/odata/v1/Products(\'{uuid}\')/Checksum/Value/$value'
+            md5um_path = f"/odata/v1/Products('{uuid}')/Checksum/Value/$value"
             md5sum = __http_request(md5um_path)
             md5sum = md5sum.decode()
 

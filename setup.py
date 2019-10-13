@@ -9,9 +9,14 @@ setup(
     url='https://github.com/emissions-api/sentinel5dl',
     packages=find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Operating System :: OS Independent',
+        'Topic :: Scientific/Engineering :: GIS',
     ],
     install_requires=['pycurl>=7.43.0'],
     long_description='This library provides easy access to data from the '

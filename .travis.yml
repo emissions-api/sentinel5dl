@@ -14,6 +14,7 @@ addons:
 
 install:
   - pip install flake8 coverage
+  - pip install coveralls
   - python setup.py install
 
 script:
@@ -25,6 +26,7 @@ after_success:
   - pip install sphinx sphinx-rtd-theme
   - make -C docs clean html
   - touch docs/build/html/.nojekyll # create this file to prevent Github's Jekyll processing
+  - coveralls
 
 deploy:
   provider: pages

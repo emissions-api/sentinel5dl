@@ -1,4 +1,13 @@
 from setuptools import setup, find_packages
+import os
+
+path = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(filename):
+    with open(os.path.join(path, filename), encoding='utf-8') as f:
+        return f.read()
+
 
 setup(
     name='sentinel5dl',
@@ -18,9 +27,9 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Scientific/Engineering :: GIS',
     ],
-    install_requires=['pycurl>=7.43.0'],
-    long_description='This library provides easy access to data from the '
-                     'European Space Agency\'s Sentinel 5P sattellite.',
+    install_requires=read('requirements.txt').split(),
+    long_description=read('README.rst'),
+    long_description_content_type='text/x-rst',
     entry_points={
         'console_scripts': [
             'sentinel5dl = sentinel5dl.__main__:main'

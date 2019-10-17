@@ -9,9 +9,16 @@ testpath = os.path.dirname(os.path.abspath(__file__))
 
 class TestSentinel5dl(unittest.TestCase):
 
-    def _mock_http_request(self, path):
+    def _mock_http_request(self, path, filename=None):
         '''Mock HTTP requests to the ESA API
         '''
+        if filename is not None:
+            self._count_download += 1
+            with open(filename, 'wb') as f:
+                f.write(b'123')
+            return
+
+        # no nownload
         self._count_request += 1
         if path.startswith('/api/stub/products?'):
             with open(os.path.join(testpath, 'products.json'), 'rb') as f:
@@ -20,20 +27,11 @@ class TestSentinel5dl(unittest.TestCase):
             # MD5 checksum for string `123`
             return b'202CB962AC59075B964B07152D234B70'
 
-    def _mock_http_download(self, path, filename):
-        '''Mock downloads from the ESA API.
-        The content of all files downloaded will be `123`
-        '''
-        self._count_download += 1
-        with open(filename, 'wb') as f:
-            f.write(b'123')
-
     def setUp(self):
         '''Patch cURL based operation in sentinel5dl so that we do not really
         make any HTTP requests and reset the request counters.
         '''
         setattr(sentinel5dl, '__http_request', self._mock_http_request)
-        setattr(sentinel5dl, '__http_download', self._mock_http_download)
         self._count_request = 0
         self._count_download = 0
 

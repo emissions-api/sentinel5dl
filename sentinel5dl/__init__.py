@@ -38,39 +38,20 @@ def __md5(filename):
     return hash_md5.hexdigest().upper()
 
 
-def __http_request(path):
-    '''Make an HTTP request to a given URL with optional parameters.
+def __http_request(path, filename=None):
+    '''Make an HTTP request to the API via HTTP, optionally downloading the
+    response.
 
-    :param path: Request path relative to the base API
-    :returns: The response body
+    :param path: Request path relative to the base API.
+    :param filename: Optional output file name. Note that this file will be
+                     overwritten if it already exists. If no filename is
+                     provided, the response will be returned.
+    :returns: The response body or None if a filename is provided.
     '''
-    buf = io.BytesIO()
-    curl = pycurl.Curl()
     url = API + path.lstrip('/')
     logger.debug(f'Requesting {url}')
-    curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
-
-    curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
-    curl.setopt(curl.WRITEFUNCTION, buf.write)
-    curl.setopt(curl.FAILONERROR, True)
-    curl.perform()
-    curl.close()
-    result = buf.getvalue()
-    buf.close()
-    return result
-
-
-def __http_download(path, filename):
-    '''Download a file from the API via HTTP.
-
-    :param path: Request path relative to the base API
-    :param filename: Output file name. Note that this file will be overwritten
-                     if it already exists.
-    '''
-    with open(filename, 'wb') as f:
+    with open(filename, 'wb') if filename else io.BytesIO() as f:
         curl = pycurl.Curl()
-        url = API + path.lstrip('/')
-        logger.debug(f'Requesting {url} for download')
         curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
@@ -78,6 +59,8 @@ def __http_download(path, filename):
         curl.setopt(curl.FAILONERROR, True)
         curl.perform()
         curl.close()
+        if not filename:
+            return f.getvalue()
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
@@ -173,4 +156,4 @@ def download(products, output_dir='.'):
             logger.info(f'Overriding {filename} since md5 hash differs.')
 
         # Download file
-        __http_download(path, filename)
+        __http_request(path, filename)

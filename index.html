@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sentinel-5P Downloader &mdash; Sentinel-5P Downloader  documentation</title>
+  <title>Python API &mdash; Sentinel-5P Downloader  documentation</title>
   
 
   
@@ -80,13 +80,8 @@
             
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Sentinel-5P Downloader</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#quick-example">Quick Example</a></li>
-<li><a class="reference internal" href="#module-sentinel5dl">Python API</a></li>
+<li><a class="reference internal" href="#">Python API</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-</li>
 </ul>
 </div>
             
@@ -132,7 +127,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Sentinel-5P Downloader</li>
+      <li>Python API</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -151,46 +146,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="sentinel-5p-downloader">
-<h1>Sentinel-5P Downloader<a class="headerlink" href="#sentinel-5p-downloader" title="Permalink to this headline">¶</a></h1>
-<a class="reference external image-reference" href="https://travis-ci.com/emissions-api/sentinel5dl"><img alt="https://travis-ci.com/emissions-api/sentinel5dl.svg?branch=master" src="https://travis-ci.com/emissions-api/sentinel5dl.svg?branch=master" /></a>
-<a class="reference external image-reference" href="https://github.com/emissions-api/sentinel5dl/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/emissions-api/sentinel5dl?color=blue" /></a>
-<a class="reference external image-reference" href="https://github.com/emissions-api/sentinel5dl/blob/master/LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/emissions-api/sentinel5dl" /></a>
-<p>This library provides easy access to data from the European Space Agency’s
-Sentinel 5P satellite.</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://pypi.org/project/sentinel5dl/">Sentinel5dl on PyPI</a></p></li>
-<li><p><a class="reference external" href="https://sentinel5dl.emissions-api.org">Online documentation</a></p></li>
-<li><p><a class="reference external" href="https://github.com/emissions-api/sentinel5dl/issues">Issue tracker</a></p></li>
-</ul>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Install this library using:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">sentinel5dl</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="quick-example">
-<h2>Quick Example<a class="headerlink" href="#quick-example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sentinel5dl</span> <span class="kn">import</span> <span class="n">search</span><span class="p">,</span> <span class="n">download</span>
-
-<span class="c1"># Search for Sentinel-5 products</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span>
-        <span class="n">polygon</span><span class="o">=</span><span class="s1">&#39;POLYGON((7.8 49.3,13.4 49.3,13.4 52.8,7.8 52.8,7.8 49.3))&#39;</span><span class="p">,</span>
-        <span class="n">begin_ts</span><span class="o">=</span><span class="s1">&#39;2019-09-01T00:00:00.000Z&#39;</span><span class="p">,</span>
-        <span class="n">end_ts</span><span class="o">=</span><span class="s1">&#39;2019-09-17T23:59:59.999Z&#39;</span><span class="p">,</span>
-        <span class="n">product</span><span class="o">=</span><span class="s1">&#39;L2__CO____&#39;</span><span class="p">,</span>
-        <span class="n">processing_level</span><span class="o">=</span><span class="s1">&#39;L2&#39;</span><span class="p">)</span>
-
-<span class="c1"># Download found products to the local folder</span>
-<span class="n">download</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="toctree-wrapper compound">
-</div>
+  <div class="toctree-wrapper compound">
 </div>
 <div class="section" id="module-sentinel5dl">
-<span id="python-api"></span><h2>Python API<a class="headerlink" href="#module-sentinel5dl" title="Permalink to this headline">¶</a></h2>
+<span id="python-api"></span><h1>Python API<a class="headerlink" href="#module-sentinel5dl" title="Permalink to this headline">¶</a></h1>
 <p>Sentinel-5P Downloader</p>
 <dl class="function">
 <dt id="sentinel5dl.download">
@@ -231,13 +190,12 @@ have the fields <cite>uuid</cite> and <cite>identifier</cite>.</p></li>
 
 </div>
 <div class="section" id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
 </div>
 
 

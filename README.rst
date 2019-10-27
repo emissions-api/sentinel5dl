@@ -3,6 +3,10 @@ Sentinel-5P Downloader
 
 .. image:: https://travis-ci.com/emissions-api/sentinel5dl.svg?branch=master
     :target: https://travis-ci.com/emissions-api/sentinel5dl
+    :alt: CI Builds
+.. image:: https://coveralls.io/repos/github/emissions-api/sentinel5dl/badge.svg?branch=master
+    :target: https://coveralls.io/github/emissions-api/sentinel5dl?branch=master
+    :alt: Test Coverage
 .. image:: https://img.shields.io/github/issues-raw/emissions-api/sentinel5dl?color=blue
     :target: https://github.com/emissions-api/sentinel5dl/issues
     :alt: GitHub issues

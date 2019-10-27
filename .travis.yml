@@ -13,14 +13,12 @@ addons:
       - libgnutls28-dev
 
 install:
-  - pip install flake8 coverage
-  - pip install coveralls
+  - pip install flake8 coverage coveralls
   - python setup.py install
 
 script:
   - flake8 sentinel5dl
   - coverage run --source=sentinel5dl -m tests
-  - coverage report
 
 after_success:
   - pip install sphinx sphinx-rtd-theme

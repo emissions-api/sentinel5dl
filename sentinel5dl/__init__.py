@@ -38,6 +38,28 @@ def __md5(filename):
     return hash_md5.hexdigest().upper()
 
 
+def __check_md5(filename, base_path):
+    '''Check the md5 sum of a given file against the ESA API.
+
+    :param filename: Path of local file to check
+    :param base_path: Base API path to for this product
+    :returns: If the local file matches the md5 checksum
+    :rtype: bool
+    '''
+    md5file = f'{filename}.md5sum'
+    try:
+        with open(md5file, 'r') as f:
+            md5sum = f.read()
+    except FileNotFoundError:
+        md5sum = __http_request(f'{base_path}/Checksum/Value/$value')
+        md5sum = md5sum.decode('ascii')
+        with open(md5file, 'w') as f:
+            f.write(md5sum)
+
+    # Compare md5 sum
+    return __md5(filename) == md5sum
+
+
 def __http_request(path, filename=None):
     '''Make an HTTP request to the API via HTTP, optionally downloading the
     response.
@@ -140,20 +162,15 @@ def download(products, output_dir='.'):
         uuid = product['uuid']
         filename = os.path.join(output_dir, product['identifier'] + '.nc')
         logger.info(f'Downloading {uuid} to {filename}')
-        path = f'/odata/v1/Products(\'{uuid}\')/$value'
+        base_path = f"/odata/v1/Products('{uuid}')"
 
         # Check if file exist
         if os.path.exists(filename):
-            # Get md5 sum
-            md5um_path = f"/odata/v1/Products('{uuid}')/Checksum/Value/$value"
-            md5sum = __http_request(md5um_path)
-            md5sum = md5sum.decode()
-
-            # Compare md5 sum
-            if __md5(filename) == md5sum:
+            # Skip download if checksum matches
+            if __check_md5(filename, base_path):
                 logger.info(f'Skipping {filename} since it already exist.')
                 continue
             logger.info(f'Overriding {filename} since md5 hash differs.')
 
         # Download file
-        __http_request(path, filename)
+        __http_request(f'{base_path}/$value', filename)

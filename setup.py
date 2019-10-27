@@ -11,7 +11,7 @@ def read(filename):
 
 setup(
     name='sentinel5dl',
-    version='0.4',
+    version='0.5',
     description='Sentinel-5p Downloader',
     author='Emissions API Developers',
     license='MIT',

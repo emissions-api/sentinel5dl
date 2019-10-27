@@ -4,8 +4,9 @@ dist: bionic
 
 # https://devguide.python.org/#branchstatus
 python:
-  - "3.6"
-  - "3.7"
+  - 3.6
+  - 3.7
+  - 3.8
 
 addons:
   apt:

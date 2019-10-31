@@ -7,8 +7,10 @@ Sentinel-5p Downloader
 :url: https://emissions-api.org
 :license: MIT
 '''
+
 import argparse
 import iso8601
+import certifi
 import logging
 import textwrap
 import sentinel5dl
@@ -150,6 +152,7 @@ def main():
     )
 
     args = parser.parse_args()
+    sentinel5dl.ca_info = certifi.where()
 
     # Search for Sentinel-5 products
     result = search(

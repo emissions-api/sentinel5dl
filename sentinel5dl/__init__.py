@@ -37,6 +37,8 @@ by your operating system, certifi provides an easy way of
 providing a cabundle.
 '''
 
+ca_info = None
+
 
 def __md5(filename):
     '''Generate the md5 sum of a file
@@ -95,7 +97,7 @@ def __http_request(path, filename=None):
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
 
-        if ca_info is not None:
+        if ca_info:
             curl.setopt(pycurl.CAINFO, ca_info)
 
         curl.perform()

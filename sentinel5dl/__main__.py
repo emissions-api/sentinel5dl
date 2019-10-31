@@ -9,9 +9,9 @@ Sentinel-5p Downloader
 '''
 import argparse
 import iso8601
+import certifi
 import logging
 import textwrap
-
 import sentinel5dl
 from sentinel5dl import search, download
 
@@ -95,6 +95,8 @@ def main():
     logger = logging.getLogger(sentinel5dl.__name__)
     logger.setLevel(logging.INFO)
 
+    sentinel5dl.ca_info = certifi.where()
+
     parser = argparse.ArgumentParser(
         description='Search for and download Sentinel-5P data files',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -143,6 +145,7 @@ def main():
 
     args = parser.parse_args()
 
+    # Search for Sentinel-5 products
     result = search(
         polygon=args.polygon,
         begin_ts=args.begin_ts,

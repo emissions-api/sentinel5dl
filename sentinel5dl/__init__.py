@@ -27,6 +27,8 @@ libraries log level like this::
     sentinel5dl.logger.setLevel(logging.DEBUG)
 '''
 
+ca_info = None
+
 
 def __md5(filename):
     '''Generate the md5 sum of a file
@@ -84,6 +86,10 @@ def __http_request(path, filename=None):
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
+
+        if ca_info:
+            curl.setopt(pycurl.CAINFO, ca_info)
+
         curl.perform()
         curl.close()
         if not filename:

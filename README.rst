@@ -17,8 +17,8 @@ Sentinel-5P Downloader
 This library provides easy access to data from the European Space Agency's
 Sentinel 5P satellite.
 
-- `Sentinel5dl on PyPI <https://pypi.org/project/sentinel5dl/>`_
-- `Online documentation <https://sentinel5dl.emissions-api.org>`_
+- `sentinel5dl on PyPI <https://pypi.org/project/sentinel5dl/>`_
+- `Documentation <https://sentinel5dl.emissions-api.org>`_
 - `Issue tracker <https://github.com/emissions-api/sentinel5dl/issues>`_
 
 

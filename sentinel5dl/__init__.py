@@ -38,7 +38,10 @@ providing a cabundle.
 '''
 
 ca_info = None
-
+'''In order to use https, pycurl needs to utilize a certificate bundle.
+One may be supplied by your operating system,
+but if not, consider using certifi.where()
+'''
 
 def __md5(filename):
     '''Generate the md5 sum of a file

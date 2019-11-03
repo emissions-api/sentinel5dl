@@ -1,24 +1,14 @@
-.. include:: ../../README.rst
-
+Sentinel-5P Downloader
+======================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
-
-Python API
-----------
-
-.. automodule:: sentinel5dl
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   home
+   contributing
+   security
 
 
 Indices and tables
 ------------------
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

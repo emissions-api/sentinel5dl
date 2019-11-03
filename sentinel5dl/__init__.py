@@ -33,6 +33,7 @@ One may be supplied by your operating system,
 but if not, consider using certifi.where()
 '''
 
+
 def __md5(filename):
     '''Generate the md5 sum of a file
 

@@ -21,6 +21,11 @@ USER = 's5pguest'
 PASS = 's5pguest'
 
 logger = logging.getLogger(__name__)
+'''Logger used by ``sentinel5dl``. Use this to specifically modify the
+libraries log level like this::
+
+    sentinel5dl.logger.setLevel(logging.DEBUG)
+'''
 
 
 def __md5(filename):

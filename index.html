@@ -209,6 +209,16 @@ have the fields <cite>uuid</cite> and <cite>identifier</cite>.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="data">
+<dt id="sentinel5dl.logger">
+<code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">logger</code><em class="property"> = &lt;Logger sentinel5dl (WARNING)&gt;</em><a class="headerlink" href="#sentinel5dl.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logger used by <code class="docutils literal notranslate"><span class="pre">sentinel5dl</span></code>. Use this to specifically modify the
+libraries log level like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sentinel5dl</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="function">
 <dt id="sentinel5dl.search">
 <code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">polygon=None</em>, <em class="sig-param">begin_ts=None</em>, <em class="sig-param">end_ts=None</em>, <em class="sig-param">product=None</em>, <em class="sig-param">processing_level='L2'</em>, <em class="sig-param">per_request_limit=25</em><span class="sig-paren">)</span><a class="headerlink" href="#sentinel5dl.search" title="Permalink to this definition">¶</a></dt>

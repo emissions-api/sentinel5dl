@@ -95,6 +95,7 @@ def main():
     logger = logging.getLogger(sentinel5dl.__name__)
     logger.setLevel(logging.INFO)
 
+# Provide a Certificate Authority (CA) bundle
     sentinel5dl.ca_info = certifi.where()
 
     parser = argparse.ArgumentParser(

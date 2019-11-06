@@ -38,9 +38,13 @@ providing a cabundle.
 '''
 
 ca_info = None
-'''In order to use https, pycurl needs to utilize a certificate bundle.
-One may be supplied by your operating system,
-but if not, consider using certifi.where()
+'''Path to Certificate Authority (CA) bundle. If this is set,
+the value is passed to CURLOPT_CAINFO. If not set,
+this option is by default set to the system path
+where libcurl's cacert bundle is assumed to be stored,
+as established at build time. If this is not already supplied
+by your operating system, certifi provides an easy way of
+providing a cabundle.
 '''
 
 

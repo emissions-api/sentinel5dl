@@ -13,6 +13,9 @@ import os.path
 import pycurl
 import urllib.parse
 import logging
+import multiprocessing
+import time
+import certifi
 
 # Data publicly provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
@@ -89,17 +92,53 @@ def __http_request(path, filename=None):
     logger.debug(f'Requesting {url}')
     with open(filename, 'wb') if filename else io.BytesIO() as f:
         curl = pycurl.Curl()
+        if ca_info:
+            curl.setopt(pycurl.CAINFO, ca_info)
         curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
 
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
 
-        if ca_info:
-            curl.setopt(pycurl.CAINFO, ca_info)
+        # while curl.getinfo(curl.RESPONSE_CODE) != or timeout == true:
+            # curl.perform()
+            # print('Status: %d' % curl.getinfo(curl.RESPONSE_CODE))
+            # time.sleep(1)
 
-        curl.perform()
+        # try to execute curl.perform() up to 10 times if it is not working
+        for attempt in range(10):
+            print("attempt ", attempt, "/10")
+            try:
+                while True:
+                    sendRequest = multiprocessing.Process(target=curl.perform())
+                    sendRequest.start()
+
+                    for timeout in range(10):
+                        print("timeout ", timeout, "/10")
+                        time.sleep(1)
+                        if not sendRequest.is_alive():
+                            break
+
+                    if sendRequest.is_alive():
+                        print("Maximum allocated time reached... Resending request")
+                        sendRequest.terminate()
+                        del sendRequest
+                    else:
+                        break
+
+                print("curl.perform() successfull")
+            except pycurl.error as e:
+                # wait before next attempt
+                print(pycurl.error, e)
+                time.sleep(1)
+            else:
+                print('curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE))
+                break
+        #else:
+            # TODO: how to return failed __http_request??
+
         curl.close()
+
         if not filename:
             return f.getvalue()
 

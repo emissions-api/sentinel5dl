@@ -103,11 +103,11 @@ def __http_request(path, filename=None):
         curl.setopt(pycurl.LOW_SPEED_LIMIT, 300)
 
         # try to execute curl.perform() up to 10 times if it is not working
-        for attempt in range(10):
+        for _ in range(10):
             try:
                 curl.perform()
 
-            except pycurl.error as e:
+            except pycurl.error:
                 # wait before next attempt
                 time.sleep(1)
             else:

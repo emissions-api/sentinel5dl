@@ -13,9 +13,7 @@ import os.path
 import pycurl
 import urllib.parse
 import logging
-import multiprocessing
 import time
-import certifi
 
 # Data publicly provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
@@ -100,41 +98,46 @@ def __http_request(path, filename=None):
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
 
-        # while curl.getinfo(curl.RESPONSE_CODE) != or timeout == true:
-            # curl.perform()
-            # print('Status: %d' % curl.getinfo(curl.RESPONSE_CODE))
-            # time.sleep(1)
+        # abort if data trnsfer is slower than 30 bytes/sec during 60 seconds
+        curl.setopt(pycurl.LOW_SPEED_TIME, 10)
+        curl.setopt(pycurl.LOW_SPEED_LIMIT, 300)
 
         # try to execute curl.perform() up to 10 times if it is not working
         for attempt in range(10):
             print("attempt ", attempt, "/10")
             try:
-                while True:
-                    sendRequest = multiprocessing.Process(target=curl.perform())
-                    sendRequest.start()
+                curl.perform()
 
-                    for timeout in range(10):
-                        print("timeout ", timeout, "/10")
-                        time.sleep(1)
-                        if not sendRequest.is_alive():
-                            break
+                print('TOTAL_TIME: %f' % curl.getinfo(curl.TOTAL_TIME))
+                print('CONNECT_TIME: %f' % curl.getinfo(curl.CONNECT_TIME))
+                print(
+                    'PRETRANSFER_TIME: %f'
+                    % curl.getinfo(curl.PRETRANSFER_TIME)
+                    )
+                print(
+                    'STARTTRANSFER_TIME: %f'
+                    % curl.getinfo(curl.STARTTRANSFER_TIME)
+                    )
 
-                    if sendRequest.is_alive():
-                        print("Maximum allocated time reached... Resending request")
-                        sendRequest.terminate()
-                        del sendRequest
-                    else:
-                        break
-
-                print("curl.perform() successfull")
             except pycurl.error as e:
-                # wait before next attempt
                 print(pycurl.error, e)
+
+                print(
+                    'curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE)
+                    )
+
+                # wait before next attempt
                 time.sleep(1)
             else:
-                print('curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE))
+                print(
+                    'curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE)
+                    )
+
+                # successful http request so dont try again
                 break
-        #else:
+        # else:
+            # maximun amount of http requests failed
+
             # TODO: how to return failed __http_request??
 
         curl.close()

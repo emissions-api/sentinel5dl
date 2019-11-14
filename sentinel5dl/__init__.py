@@ -104,35 +104,13 @@ def __http_request(path, filename=None):
 
         # try to execute curl.perform() up to 10 times if it is not working
         for attempt in range(10):
-            print("attempt ", attempt, "/10")
             try:
                 curl.perform()
 
-                print('TOTAL_TIME: %f' % curl.getinfo(curl.TOTAL_TIME))
-                print('CONNECT_TIME: %f' % curl.getinfo(curl.CONNECT_TIME))
-                print(
-                    'PRETRANSFER_TIME: %f'
-                    % curl.getinfo(curl.PRETRANSFER_TIME)
-                    )
-                print(
-                    'STARTTRANSFER_TIME: %f'
-                    % curl.getinfo(curl.STARTTRANSFER_TIME)
-                    )
-
             except pycurl.error as e:
-                print(pycurl.error, e)
-
-                print(
-                    'curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE)
-                    )
-
                 # wait before next attempt
                 time.sleep(1)
             else:
-                print(
-                    'curl.RESPONSE_CODE: %d' % curl.getinfo(curl.RESPONSE_CODE)
-                    )
-
                 # successful http request so dont try again
                 break
         # else:

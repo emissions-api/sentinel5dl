@@ -12,6 +12,8 @@ import iso8601
 import certifi
 import logging
 import textwrap
+import argparse
+
 import sentinel5dl
 from sentinel5dl import search, download
 

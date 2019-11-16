@@ -15,7 +15,7 @@ import urllib.parse
 import logging
 
 
-# Data publically provided by ESA:
+# Data publicly provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
 USER = 's5pguest'
 PASS = 's5pguest'

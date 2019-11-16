@@ -9,11 +9,8 @@ Sentinel-5p Downloader
 '''
 import argparse
 import iso8601
-import certifi
 import logging
 import textwrap
-import argparse
-
 import sentinel5dl
 from sentinel5dl import search, download
 
@@ -97,9 +94,6 @@ def main():
     logger = logging.getLogger(sentinel5dl.__name__)
     logger.setLevel(logging.INFO)
 
-# Provide a Certificate Authority (CA) bundle
-    sentinel5dl.ca_info = certifi.where()
-
     parser = argparse.ArgumentParser(
         description='Search for and download Sentinel-5P data files',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -146,6 +140,15 @@ def main():
             Example: 2019-09-17T23:59:59.999Z'''
     )
 
+    parser.add_argument(
+        '--useCertifi',
+        default='false',
+        action='store_true',
+        help='''If Certificate Authority (CA) bundle is not already supplied
+            by your operating system, certifi provides an easy way of
+            providing a cabundle.'''
+    )
+
     args = parser.parse_args()
 
     # Search for Sentinel-5 products
@@ -154,7 +157,8 @@ def main():
         begin_ts=args.begin_ts,
         end_ts=args.end_ts,
         product=args.product,
-        processing_level=args.level
+        processing_level=args.level,
+        useCertifi=args.useCertifi
     )
 
     # Download found products to the local folder

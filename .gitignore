@@ -129,3 +129,4 @@ dmypy.json
 
 # Download artifacts
 *.nc
+*.md5sum

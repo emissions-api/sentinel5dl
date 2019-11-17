@@ -127,7 +127,7 @@ def main():
     )
 
     parser.add_argument(
-        '--begin_ts',
+        '--begin-ts',
         default='2019-09-01T00:00:00.000Z',
         type=validate_date_string,
         help='''ISO-8601 timestamp specifying the earliest sensing date.
@@ -135,7 +135,7 @@ def main():
     )
 
     parser.add_argument(
-        '--end_ts',
+        '--end-ts',
         default='2019-09-17T23:59:59.999Z',
         type=validate_date_string,
         help='''ISO-8601 timestamp specifying the latest sensing date.
@@ -143,7 +143,7 @@ def main():
     )
 
     parser.add_argument(
-        '--use_certifi',
+        '--use-certifi',
         default='false',
         action='store_true',
         help='''If Certificate Authority (CA) bundle is not already supplied

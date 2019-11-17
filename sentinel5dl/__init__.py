@@ -36,16 +36,6 @@ by your operating system, certifi provides an easy way of
 providing a cabundle.
 '''
 
-ca_info = None
-'''Path to Certificate Authority (CA) bundle. If this is set,
-the value is passed to CURLOPT_CAINFO. If not set,
-this option is by default set to the system path
-where libcurl's cacert bundle is assumed to be stored,
-as established at build time. If this is not already supplied
-by your operating system, certifi provides an easy way of
-providing a cabundle.
-'''
-
 
 def __md5(filename):
     '''Generate the md5 sum of a file
@@ -94,6 +84,7 @@ def __http_request(path, filename=None):
                      provided, the response will be returned.
     :returns: The response body or None if a filename is provided.
     '''
+
     url = API + path.lstrip('/')
     logger.debug(f'Requesting {url}')
     with open(filename, 'wb') if filename else io.BytesIO() as f:

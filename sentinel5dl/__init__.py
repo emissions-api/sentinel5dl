@@ -13,7 +13,6 @@ import os.path
 import pycurl
 import urllib.parse
 import logging
-import certifi
 
 # Data publically provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
@@ -149,7 +148,7 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
 
 
 def search(polygon=None, begin_ts=None, end_ts=None, product=None,
-           processing_level='L2', per_request_limit=25, use_certifi=False):
+           processing_level='L2', per_request_limit=25):
     '''Search for products via API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
@@ -160,11 +159,6 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     :param per_request_limit: Limit number of results per request
     :returns: Dictionary containing information about found products
     '''
-
-    global ca_info
-
-    if use_certifi is True:
-        ca_info = certifi.where()
 
     count = 0
     total = 1

@@ -1,4 +1,7 @@
 pycurl>=7.43.0
 iso8601==0.1.12
+<<<<<<< HEAD
 certifi==2019.9.11
 argparse==1.4.0
+=======
+>>>>>>> changed useCertifi parameter to use_certifi

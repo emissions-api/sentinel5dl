@@ -149,7 +149,7 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
 
 
 def search(polygon=None, begin_ts=None, end_ts=None, product=None,
-           processing_level='L2', per_request_limit=25, useCertifi=False):
+           processing_level='L2', per_request_limit=25, use_certifi=False):
     '''Search for products via API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
@@ -163,7 +163,7 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
 
     global ca_info
 
-    if useCertifi is True:
+    if use_certifi is True:
         ca_info = certifi.where()
 
     count = 0

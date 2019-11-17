@@ -143,7 +143,7 @@ def main():
     )
 
     parser.add_argument(
-        '--useCertifi',
+        '--use_certifi',
         default='false',
         action='store_true',
         help='''If Certificate Authority (CA) bundle is not already supplied
@@ -163,7 +163,7 @@ def main():
         end_ts=args.end_ts,
         product=args.product,
         processing_level=args.level,
-        useCertifi=args.useCertifi
+        useCertifi=args.use_certifi
     )
 
     # Download found products to the local folder

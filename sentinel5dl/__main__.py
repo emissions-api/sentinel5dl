@@ -91,7 +91,7 @@ def validate_date_string(date_string):
 
 
 def main():
-    # Confgure logging in the library
+    # Configure logging in the library
     logging.basicConfig()
     logger = logging.getLogger(sentinel5dl.__name__)
     logger.setLevel(logging.INFO)

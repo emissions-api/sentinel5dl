@@ -144,7 +144,6 @@ def main():
 
     parser.add_argument(
         '--use-certifi',
-        default='false',
         action='store_true',
         help='''If Certificate Authority (CA) bundle is not already supplied
             by your operating system, certifi provides an easy way of

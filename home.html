@@ -193,6 +193,18 @@ Sentinel 5P satellite.</p>
 <div class="section" id="module-sentinel5dl">
 <span id="python-api"></span><h2>Python API<a class="headerlink" href="#module-sentinel5dl" title="Permalink to this headline">¶</a></h2>
 <p>Sentinel-5P Downloader</p>
+<dl class="data">
+<dt id="sentinel5dl.ca_info">
+<code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">ca_info</code><em class="property"> = None</em><a class="headerlink" href="#sentinel5dl.ca_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Certificate Authority (CA) bundle. If this is set,
+the value is passed to CURLOPT_CAINFO. If not set,
+this option is by default set to the system path
+where libcurl’s cacert bundle is assumed to be stored,
+as established at build time. If this is not already supplied
+by your operating system, certifi provides an easy way of
+providing a cabundle.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="sentinel5dl.download">
 <code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param">products</em>, <em class="sig-param">output_dir='.'</em><span class="sig-paren">)</span><a class="headerlink" href="#sentinel5dl.download" title="Permalink to this definition">¶</a></dt>

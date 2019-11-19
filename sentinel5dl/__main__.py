@@ -7,11 +7,12 @@ Sentinel-5p Downloader
 :url: https://emissions-api.org
 :license: MIT
 '''
+
 import argparse
 import iso8601
+import certifi
 import logging
 import textwrap
-
 import sentinel5dl
 from sentinel5dl import search, download
 
@@ -141,8 +142,21 @@ def main():
             Example: 2019-09-17T23:59:59.999Z'''
     )
 
+    parser.add_argument(
+        '--use-certifi',
+        action='store_true',
+        help='''If Certificate Authority (CA) bundle is not already supplied
+            by your operating system, certifi provides an easy way of
+            providing a cabundle.'''
+    )
+
     args = parser.parse_args()
 
+    # Provide a Certificate Authority (CA) bundle
+    if args.use_certifi:
+        sentinel5dl.ca_info = certifi.where()
+
+    # Search for Sentinel-5 products
     result = search(
         polygon=args.polygon,
         begin_ts=args.begin_ts,

@@ -14,7 +14,6 @@ import pycurl
 import urllib.parse
 import logging
 
-
 # Data publicly provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
 USER = 's5pguest'
@@ -25,6 +24,16 @@ logger = logging.getLogger(__name__)
 libraries log level like this::
 
     sentinel5dl.logger.setLevel(logging.DEBUG)
+'''
+
+ca_info = None
+'''Path to Certificate Authority (CA) bundle. If this is set,
+the value is passed to CURLOPT_CAINFO. If not set,
+this option is by default set to the system path
+where libcurl's cacert bundle is assumed to be stored,
+as established at build time. If this is not already supplied
+by your operating system, certifi provides an easy way of
+providing a cabundle.
 '''
 
 
@@ -75,6 +84,7 @@ def __http_request(path, filename=None):
                      provided, the response will be returned.
     :returns: The response body or None if a filename is provided.
     '''
+
     url = API + path.lstrip('/')
     logger.debug(f'Requesting {url}')
     with open(filename, 'wb') if filename else io.BytesIO() as f:
@@ -84,6 +94,10 @@ def __http_request(path, filename=None):
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
+
+        if ca_info:
+            curl.setopt(pycurl.CAINFO, ca_info)
+
         curl.perform()
         curl.close()
         if not filename:
@@ -136,6 +150,7 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     :param per_request_limit: Limit number of results per request
     :returns: Dictionary containing information about found products
     '''
+
     count = 0
     total = 1
     data = None

@@ -106,21 +106,22 @@ def __http_request(path, filename=None):
         curl.setopt(pycurl.LOW_SPEED_TIME, 60)
         curl.setopt(pycurl.LOW_SPEED_LIMIT, 30)
 
-        retrys = 0
-
         # try to execute curl.perform() up to 10 times if it is not working
-        try:
-            curl.perform()
+        for retrys in range(10):
+            try:
+                curl.perform()
 
-        except pycurl.error as err:
-            retrys += 1
+            except pycurl.error as err:
 
-            # if last try failed too
-            if retrys >= 9:
-                raise err
+                # if last try failed too
+                if retrys >= 9:
+                    raise err
 
-            # wait one second before truy perform again
-            time.sleep(1)
+                # wait one second before truy perform again
+                time.sleep(1)
+            else:
+                # dont retry
+                break
 
         curl.close()
 

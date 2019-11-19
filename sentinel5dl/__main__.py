@@ -153,7 +153,7 @@ def main():
     args = parser.parse_args()
 
     # Provide a Certificate Authority (CA) bundle
-    if args.use_certifi is True:
+    if args.use_certifi:
         sentinel5dl.ca_info = certifi.where()
 
     # Search for Sentinel-5 products

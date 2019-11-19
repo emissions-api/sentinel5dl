@@ -98,25 +98,29 @@ def __http_request(path, filename=None):
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
 
-        # abort if data trnsfer is slower than 30 bytes/sec during 60 seconds
-        curl.setopt(pycurl.LOW_SPEED_TIME, 10)
-        curl.setopt(pycurl.LOW_SPEED_LIMIT, 300)
+        # Use a Certificate Authority (CA) bundle if set
+        if ca_info:
+            curl.setopt(pycurl.CAINFO, ca_info)
+
+        # abort if data transfer is slower than 30 bytes/sec during 60 seconds
+        curl.setopt(pycurl.LOW_SPEED_TIME, 60)
+        curl.setopt(pycurl.LOW_SPEED_LIMIT, 30)
+
+        retrys = 0
 
         # try to execute curl.perform() up to 10 times if it is not working
-        for _ in range(10):
-            try:
-                curl.perform()
+        try:
+            curl.perform()
 
-            except pycurl.error:
-                # wait before next attempt
-                time.sleep(1)
-            else:
-                # successful http request so dont try again
-                break
-        # else:
-            # maximun amount of http requests failed
+        except pycurl.error as err:
+            retrys += 1
 
-            # TODO: how to return failed __http_request??
+            # if last try failed too
+            if retrys >= 9:
+                raise err
+
+            # wait one second before truy perform again
+            time.sleep(1)
 
         curl.close()
 

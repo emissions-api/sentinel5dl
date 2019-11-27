@@ -1,3 +1,4 @@
+import datetime
 import os
 import sentinel5dl
 import tempfile
@@ -45,8 +46,8 @@ class TestSentinel5dl(unittest.TestCase):
         '''
         result = sentinel5dl.search(
             polygon='POLYGON((7 49,13 49,13 52,7 52,7 49))',
-            begin_ts='2019-09-01T00:00:00.000Z',
-            end_ts='2019-09-17T23:59:59.999Z',
+            begin_ts=datetime.datetime.fromtimestamp(0),
+            end_ts=datetime.datetime.now(),
             product='L2__CO____')
 
         # The result returned by the mock contains four products but claims a

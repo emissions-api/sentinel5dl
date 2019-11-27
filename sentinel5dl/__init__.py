@@ -6,6 +6,7 @@
 '''Sentinel-5P Downloader
 '''
 
+import datetime
 import hashlib
 import io
 import json
@@ -143,14 +144,17 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     '''Search for products via API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
-    :param begin_ts: ISO-8601 timestamp specifying the earliest sensing date
-    :param end_ts: ISO-8601 timestamp specifying the latest sensing date
+    :param begin_ts: Datetime specifying the earliest sensing date
+    :param end_ts: Datetime specifying the latest sensing date
     :param product: Type of product to request
     :param processing_level: Data processing level (`L1B` or `L2`)
     :param per_request_limit: Limit number of results per request
     :returns: Dictionary containing information about found products
     '''
-
+    if type(begin_ts) == datetime.datetime:
+        begin_ts = begin_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    if type(end_ts) == datetime.datetime:
+        end_ts = end_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
     count = 0
     total = 1
     data = None

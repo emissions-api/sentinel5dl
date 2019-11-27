@@ -9,7 +9,7 @@ Sentinel-5p Downloader
 '''
 
 import argparse
-import iso8601
+import dateutil.parser
 import certifi
 import logging
 import textwrap
@@ -77,19 +77,6 @@ def is_polygon(polygon):
     return f'POLYGON(({polygon}))'
 
 
-def validate_date_string(date_string):
-    '''Validate that the supplied argument is a valid iso8601 date-time string.
-
-    :param date_string: Date string to validate
-    :return: Supplied date string
-    '''
-    try:
-        iso8601.parse_date(date_string)
-    except iso8601.iso8601.ParseError:
-        raise ValueError('Unable to parse date')
-    return date_string
-
-
 def main():
     # Configure logging in the library
     logging.basicConfig()
@@ -129,16 +116,16 @@ def main():
     parser.add_argument(
         '--begin-ts',
         default='2019-09-01T00:00:00.000Z',
-        type=validate_date_string,
-        help='''ISO-8601 timestamp specifying the earliest sensing date.
+        type=dateutil.parser.parse,
+        help='''Timestamp specifying the earliest sensing date.
             Example: 2019-09-01T00:00:00.000Z'''
     )
 
     parser.add_argument(
         '--end-ts',
         default='2019-09-17T23:59:59.999Z',
-        type=validate_date_string,
-        help='''ISO-8601 timestamp specifying the latest sensing date.
+        type=dateutil.parser.parse,
+        help='''Timestamp specifying the latest sensing date.
             Example: 2019-09-17T23:59:59.999Z'''
     )
 

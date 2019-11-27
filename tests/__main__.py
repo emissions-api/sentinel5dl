@@ -1,7 +1,9 @@
 import os
 import sentinel5dl
+import sentinel5dl.__main__ as executable
 import tempfile
 import unittest
+import logging
 
 
 testpath = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +41,7 @@ class TestSentinel5dl(unittest.TestCase):
         self._count_search_request = 0
         self._count_checksum_request = 0
         self._count_download = 0
+        logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
 
     def test(self):
         '''Test search and download.
@@ -79,6 +82,28 @@ class TestSentinel5dl(unittest.TestCase):
         self.assertEqual(self._count_checksum_request, 4)
         # We should have downloaded four unique files
         self.assertEqual(self._count_download, 4)
+
+
+class TestExecutable(unittest.TestCase):
+
+    def _mock_search(self, *args, **kwargs):
+        return {'products': []}
+
+    def _mock_download(self, products):
+        assert products == []
+
+    def setUp(self):
+        '''Patch cURL based operation in sentinel5dl so that we do not really
+        make any HTTP requests and reset the request counters.
+        '''
+        setattr(executable, 'search', self._mock_search)
+        setattr(executable, 'download', self._mock_download)
+        logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
+
+    def test(self):
+        '''Test search and download.
+        '''
+        executable.main()
 
 
 if __name__ == '__main__':

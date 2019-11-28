@@ -90,10 +90,7 @@ def __http_request(path, filename=None):
     logger.debug(f'Requesting {url}')
     with open(filename, 'wb') if filename else io.BytesIO() as f:
         curl = pycurl.Curl()
-        if ca_info:
-            curl.setopt(pycurl.CAINFO, ca_info)
         curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
-
         curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
         curl.setopt(curl.WRITEDATA, f)
         curl.setopt(curl.FAILONERROR, True)
@@ -102,26 +99,30 @@ def __http_request(path, filename=None):
         if ca_info:
             curl.setopt(pycurl.CAINFO, ca_info)
 
-        # abort if data transfer is slower than 30 bytes/sec during 60 seconds
+        # abort if data transfer is not responding but didn't errored
         curl.setopt(pycurl.LOW_SPEED_TIME, 60)
         curl.setopt(pycurl.LOW_SPEED_LIMIT, 30)
 
         # try to execute curl.perform() up to 10 times if it is not working
-        for retrys in range(10):
+        for retries in range(10):
             try:
                 curl.perform()
+
+                # don't retry on sucessfull perform
+                break
 
             except pycurl.error as err:
 
                 # if last try failed too
-                if retrys >= 9:
+                if retries >= 9:
                     raise err
+                else:
+                    # logging the error
+                    logger.warning(
+                        "Error performing the HTTP request, Retrying: %s", err)
 
                 # wait one second before truy perform again
                 time.sleep(1)
-            else:
-                # dont retry
-                break
 
         curl.close()
 

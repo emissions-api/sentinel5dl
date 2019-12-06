@@ -4,6 +4,7 @@ import sentinel5dl.__main__ as executable
 import tempfile
 import unittest
 import logging
+import sys
 
 
 testpath = os.path.dirname(os.path.abspath(__file__))
@@ -99,6 +100,8 @@ class TestExecutable(unittest.TestCase):
         setattr(executable, 'search', self._mock_search)
         setattr(executable, 'download', self._mock_download)
         logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
+        # override sys.argv. Otherwise argparse is trying to parse it.
+        sys.argv = sys.argv[0:1]
 
     def test(self):
         '''Test search and download.

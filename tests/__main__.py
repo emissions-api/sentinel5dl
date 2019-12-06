@@ -94,9 +94,7 @@ class TestExecutable(unittest.TestCase):
         self.assertEqual(products, [])
 
     def setUp(self):
-        '''Patch cURL based operation in sentinel5dl so that we do not really
-        make any HTTP requests and reset the request counters.
-        '''
+        # Mock library calls
         setattr(executable, 'search', self._mock_search)
         setattr(executable, 'download', self._mock_download)
         logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
@@ -104,7 +102,7 @@ class TestExecutable(unittest.TestCase):
         sys.argv = sys.argv[0:1]
 
     def test(self):
-        '''Test search and download.
+        '''Test the executable.
         '''
         executable.main()
 

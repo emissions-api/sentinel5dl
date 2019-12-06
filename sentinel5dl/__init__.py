@@ -6,7 +6,6 @@
 '''Sentinel-5P Downloader
 '''
 
-import datetime
 import hashlib
 import io
 import json
@@ -151,10 +150,15 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     :param per_request_limit: Limit number of results per request
     :returns: Dictionary containing information about found products
     '''
-    if type(begin_ts) == datetime.datetime:
+    try:
         begin_ts = begin_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-    if type(end_ts) == datetime.datetime:
+    except AttributeError:
+        pass
+    try:
         end_ts = end_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    except AttributeError:
+        pass
+
     count = 0
     total = 1
     data = None

@@ -91,7 +91,7 @@ class TestExecutable(unittest.TestCase):
         return {'products': []}
 
     def _mock_download(self, products):
-        assert products == []
+        self.assertEqual(products, [])
 
     def setUp(self):
         '''Patch cURL based operation in sentinel5dl so that we do not really

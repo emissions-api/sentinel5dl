@@ -91,7 +91,7 @@ class TestExecutable(unittest.TestCase):
     def _mock_search(self, *args, **kwargs):
         return {'products': []}
 
-    def _mock_download(self, products):
+    def _mock_download(self, products, _):
         self.assertEqual(products, [])
 
     def setUp(self):
@@ -100,7 +100,7 @@ class TestExecutable(unittest.TestCase):
         setattr(executable, 'download', self._mock_download)
         logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
         # override sys.argv. Otherwise argparse is trying to parse it.
-        sys.argv = sys.argv[0:1]
+        sys.argv = sys.argv[0:1] + ['.']
 
     def test(self):
         '''Test the executable.

@@ -137,6 +137,12 @@ def main():
             providing a cabundle.'''
     )
 
+    parser.add_argument(
+        'download_dir',
+        metavar='download-dir',
+        help='Download directory'
+    )
+
     args = parser.parse_args()
 
     # Provide a Certificate Authority (CA) bundle
@@ -153,7 +159,7 @@ def main():
     )
 
     # Download found products to the local folder
-    download(result.get('products'))
+    download(result.get('products'), args.download_dir)
 
 
 if __name__ == '__main__':

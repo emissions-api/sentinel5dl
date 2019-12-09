@@ -93,7 +93,6 @@ def main():
     parser.add_argument(
         '--polygon',
         type=is_polygon,
-        default='7.88 49.34,13.45 49.34,13.45 52.87,7.88 52.87,7.88 49.34',
         help='''Polygon defining an area by a set of coordinates.
             Example: 30.1 10.0, 40.0 40.1, 20 40, 10 20, 30.1 10.0'''
     )
@@ -132,7 +131,7 @@ def main():
     parser.add_argument(
         '--use-certifi',
         action='store_true',
-        help='''If Certificate Authority (CA) bundle is not already supplied
+        help='''If a Certificate Authority (CA) bundle is not already supplied
             by your operating system, certifi provides an easy way of
             providing a cabundle.'''
     )

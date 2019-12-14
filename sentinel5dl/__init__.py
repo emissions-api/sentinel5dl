@@ -75,7 +75,7 @@ def __check_md5(filename, base_path):
     return __md5(filename) == md5sum
 
 
-def __http_request(path, filename=None):
+def __http_request(path, filename=None, retries=9):
     '''Make an HTTP request to the API via HTTP, optionally downloading the
     response.
 
@@ -83,48 +83,41 @@ def __http_request(path, filename=None):
     :param filename: Optional output file name. Note that this file will be
                      overwritten if it already exists. If no filename is
                      provided, the response will be returned.
+    :param retries: Number of times the request should be repeated if an error
+                    occurred with that request (e.g. a network timeout)
     :returns: The response body or None if a filename is provided.
     '''
 
     url = API + path.lstrip('/')
     logger.debug(f'Requesting {url}')
-    with open(filename, 'wb') if filename else io.BytesIO() as f:
-        curl = pycurl.Curl()
-        curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
-        curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
-        curl.setopt(curl.WRITEDATA, f)
-        curl.setopt(curl.FAILONERROR, True)
+    try:
+        with open(filename, 'wb') if filename else io.BytesIO() as f:
+            curl = pycurl.Curl()
+            curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
+            curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
+            curl.setopt(curl.WRITEDATA, f)
+            curl.setopt(curl.FAILONERROR, True)
 
-        # Use a Certificate Authority (CA) bundle if set
-        if ca_info:
-            curl.setopt(pycurl.CAINFO, ca_info)
+            # Use a Certificate Authority (CA) bundle if set
+            if ca_info:
+                curl.setopt(pycurl.CAINFO, ca_info)
 
-        # Abort if data transfer is not responding but didn't errored
-        curl.setopt(pycurl.LOW_SPEED_TIME, 60)
-        curl.setopt(pycurl.LOW_SPEED_LIMIT, 30)
+            # Abort if data transfer is not responding but didn't errored
+            curl.setopt(pycurl.LOW_SPEED_TIME, 60)
+            curl.setopt(pycurl.LOW_SPEED_LIMIT, 30)
 
-        # Try to execute curl.perform() up to 10 times if it is not working
-        for retries in range(10):
-            try:
-                curl.perform()
+            curl.perform()
+            curl.close()
 
-                # Don't retry on success
-                break
+            if not filename:
+                return f.getvalue()
 
-            except pycurl.error as err:
-
-                # On last try
-                if retries >= 9:
-                    raise err
-                logger.warning('Retrying failed HTTP request. %s', err)
-
-                # wait one second before retrying
-                time.sleep(1)
-
-        curl.close()
-
-        if not filename:
-            return f.getvalue()
+    except pycurl.error as err:
+        if not retries:
+            raise err
+        logger.warning('Retrying failed HTTP request. %s', err)
+        time.sleep(1)
+        __http_request(path, filename, retries-1)
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level, offset,

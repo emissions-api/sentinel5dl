@@ -89,7 +89,7 @@ def __http_request(path, filename=None, retries=9):
     '''
 
     url = API + path.lstrip('/')
-    logger.debug(f'Requesting {url}')
+    logger.debug('Requesting %s', url)
     try:
         with open(filename, 'wb') if filename else io.BytesIO() as f:
             curl = pycurl.Curl()
@@ -189,8 +189,8 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
         else:
             data = s
         count = len(data['products'])
-        logger.debug(f'Received {count} of {total} data sets')
-    logger.info('Found {0} products'.format(len(data.get('products', []))))
+        logger.debug('Received %s of %s data sets', count, total)
+    logger.info('Found %s products', count)
     return data
 
 
@@ -205,16 +205,16 @@ def download(products, output_dir='.'):
     for product in products:
         uuid = product['uuid']
         filename = os.path.join(output_dir, product['identifier'] + '.nc')
-        logger.info(f'Downloading {uuid} to {filename}')
+        logger.info('Downloading %s to %s', uuid, filename)
         base_path = f"/odata/v1/Products('{uuid}')"
 
         # Check if file exist
         if os.path.exists(filename):
             # Skip download if checksum matches
             if __check_md5(filename, base_path):
-                logger.info(f'Skipping {filename} since it already exist.')
+                logger.info('Skipping %s since it already exist.', filename)
                 continue
-            logger.info(f'Overriding {filename} since md5 hash differs.')
+            logger.info('Overriding %s since md5 hash differs.', filename)
 
         # Download file
         __http_request(f'{base_path}/$value', filename)

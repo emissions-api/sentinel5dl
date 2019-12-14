@@ -44,7 +44,8 @@ Quick Example
             begin_ts='2019-09-01T00:00:00.000Z',
             end_ts='2019-09-17T23:59:59.999Z',
             product='L2__CO____',
-            processing_level='L2')
+            processing_level='L2',
+            processing_mode='Offline')
 
     # Download found products to the local folder
     download(result.get('products'))

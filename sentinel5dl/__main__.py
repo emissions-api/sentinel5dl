@@ -31,7 +31,7 @@ PRODUCTS = (
     'L2__AER_LH',
     'L2__CH4___',
     'L2__CLOUD_',
-    'L2__CO___',
+    'L2__CO____',
     'L2__HCHO__',
     'L2__NO2___',
     'L2__NP_BD3',
@@ -49,6 +49,12 @@ PRODUCTS_STR = textwrap.fill(', '.join(PRODUCTS),
 PROCESSING_LEVELS = (
     'L1B',
     'L2'
+)
+
+PROCESSING_MODES = (
+    'Offline',
+    'Near real time',
+    'Reprocessing'
 )
 
 
@@ -113,6 +119,12 @@ def main():
     )
 
     parser.add_argument(
+        '--mode',
+        choices=PROCESSING_MODES,
+        help='Data processing mode'
+    )
+
+    parser.add_argument(
         '--begin-ts',
         default='2019-09-01T00:00:00.000Z',
         type=dateutil.parser.parse,
@@ -154,7 +166,8 @@ def main():
         begin_ts=args.begin_ts,
         end_ts=args.end_ts,
         product=args.product,
-        processing_level=args.level
+        processing_level=args.level,
+        processing_mode=args.mode
     )
 
     # Download found products to the local folder

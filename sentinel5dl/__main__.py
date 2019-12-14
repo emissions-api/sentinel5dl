@@ -33,13 +33,13 @@ PRODUCTS = (
     'L2__CLOUD_',
     'L2__CO___',
     'L2__HCHO__',
-    'L2__NO2__',
+    'L2__NO2___',
     'L2__NP_BD3',
     'L2__NP_BD6',
     'L2__NP_BD7',
     'L2__O3_TCL',
-    'L2__O3___',
-    'L2__SO2__',
+    'L2__O3____',
+    'L2__SO2___',
 )
 
 PRODUCTS_STR = textwrap.fill(', '.join(PRODUCTS),

@@ -183,7 +183,8 @@ Sentinel 5P satellite.</p>
         <span class="n">begin_ts</span><span class="o">=</span><span class="s1">&#39;2019-09-01T00:00:00.000Z&#39;</span><span class="p">,</span>
         <span class="n">end_ts</span><span class="o">=</span><span class="s1">&#39;2019-09-17T23:59:59.999Z&#39;</span><span class="p">,</span>
         <span class="n">product</span><span class="o">=</span><span class="s1">&#39;L2__CO____&#39;</span><span class="p">,</span>
-        <span class="n">processing_level</span><span class="o">=</span><span class="s1">&#39;L2&#39;</span><span class="p">)</span>
+        <span class="n">processing_level</span><span class="o">=</span><span class="s1">&#39;L2&#39;</span><span class="p">,</span>
+        <span class="n">processing_mode</span><span class="o">=</span><span class="s1">&#39;Offline&#39;</span><span class="p">)</span>
 
 <span class="c1"># Download found products to the local folder</span>
 <span class="n">download</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">))</span>
@@ -233,7 +234,7 @@ libraries log level like this:</p>
 
 <dl class="function">
 <dt id="sentinel5dl.search">
-<code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">polygon=None</em>, <em class="sig-param">begin_ts=None</em>, <em class="sig-param">end_ts=None</em>, <em class="sig-param">product=None</em>, <em class="sig-param">processing_level='L2'</em>, <em class="sig-param">per_request_limit=25</em><span class="sig-paren">)</span><a class="headerlink" href="#sentinel5dl.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sentinel5dl.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">polygon=None</em>, <em class="sig-param">begin_ts=None</em>, <em class="sig-param">end_ts=None</em>, <em class="sig-param">product=None</em>, <em class="sig-param">processing_level='L2'</em>, <em class="sig-param">processing_mode=None</em>, <em class="sig-param">per_request_limit=25</em><span class="sig-paren">)</span><a class="headerlink" href="#sentinel5dl.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for products via API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -242,7 +243,9 @@ libraries log level like this:</p>
 <li><p><strong>begin_ts</strong> – Datetime specifying the earliest sensing date</p></li>
 <li><p><strong>end_ts</strong> – Datetime specifying the latest sensing date</p></li>
 <li><p><strong>product</strong> – Type of product to request</p></li>
-<li><p><strong>processing_level</strong> – Data processing level (<cite>L1B</cite> or <cite>L2</cite>)</p></li>
+<li><p><strong>processing_level</strong> – Data processing level (<code class="docutils literal notranslate"><span class="pre">L1B</span></code> or <code class="docutils literal notranslate"><span class="pre">L2</span></code>)</p></li>
+<li><p><strong>processing_mode</strong> – Data processing mode (<code class="docutils literal notranslate"><span class="pre">Offline</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Near</span> <span class="pre">real</span> <span class="pre">time</span></code> or <code class="docutils literal notranslate"><span class="pre">Reprocessing</span></code>)</p></li>
 <li><p><strong>per_request_limit</strong> – Limit number of results per request</p></li>
 </ul>
 </dd>

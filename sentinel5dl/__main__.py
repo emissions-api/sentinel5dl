@@ -12,6 +12,7 @@ import argparse
 import dateutil.parser
 import certifi
 import logging
+import multiprocessing
 import textwrap
 import sentinel5dl
 from sentinel5dl import search, download
@@ -149,6 +150,13 @@ def main():
     )
 
     parser.add_argument(
+        '--worker',
+        type=int,
+        default=1,
+        help='Number of parallel downloads',
+    )
+
+    parser.add_argument(
         'download_dir',
         metavar='download-dir',
         help='Download directory'
@@ -170,8 +178,11 @@ def main():
         processing_mode=args.mode
     )
 
-    # Download found products to the local folder
-    download(result.get('products'), args.download_dir)
+    # Download found products to the download directory with number of workers
+    with multiprocessing.Pool(args.worker) as p:
+        p.starmap(download, map(
+            lambda product: ((product,), args.download_dir),
+            result.get('products')))
 
 
 if __name__ == '__main__':

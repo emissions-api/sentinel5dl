@@ -91,7 +91,7 @@ def __http_request(path, filename=None, retries=9):
     url = API + path.lstrip('/')
     logger.debug('Requesting %s', url)
     try:
-        with open(filename, 'wb') if filename else io.BytesIO() as f:
+        with open(f'{filename}.tmp', 'wb') if filename else io.BytesIO() as f:
             curl = pycurl.Curl()
             curl.setopt(curl.URL, url.encode('ascii', 'ignore'))
             curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
@@ -109,11 +109,16 @@ def __http_request(path, filename=None, retries=9):
             curl.perform()
             curl.close()
 
-            if not filename:
+            if filename:
+                os.rename(f'{filename}.tmp', filename)
+            else:
                 return f.getvalue()
 
     except pycurl.error as err:
         if not retries:
+            if filename:
+                logger.info('Removing temporary file %s.tmp', filename)
+                os.remove(f'{filename}.tmp')
             raise err
         logger.warning('Retrying failed HTTP request. %s', err)
         time.sleep(1)

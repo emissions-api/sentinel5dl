@@ -203,7 +203,7 @@ def download(products, worker_num, output_dir='.'):
     :param output_dir: Directory to which the files will be downloaded.
     """
 
-    def call_with_retries(retries_num=5, delay=5):
+    def call_with_retries(retries_num=5, delay=1):
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):

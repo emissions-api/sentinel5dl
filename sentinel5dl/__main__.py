@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Sentinel-5p Downloader
 ~~~~~~~~~~~~~~~~~~~~~~
 
 :copyright: 2019, The Emissions API Developers
 :url: https://emissions-api.org
 :license: MIT
-'''
+"""
 
 import argparse
 import dateutil.parser
@@ -14,6 +14,7 @@ import certifi
 import logging
 import textwrap
 import sentinel5dl
+import os
 from sentinel5dl import search, download
 
 PRODUCTS = (
@@ -59,12 +60,12 @@ PROCESSING_MODES = (
 
 
 def is_polygon(polygon):
-    '''Validate if the supplied polygon string is in the necessary format to be
+    """Validate if the supplied polygon string is in the necessary format to be
     used as part of a WKT polygon string.
 
     :param polygon: Polygon string in the form of lon1 lat1, lon2 lat2, ...
     :return: WKT polygon
-    '''
+    """
     values = [value.strip() for value in polygon.split(',')]
 
     # Polygon must be at least a triangle
@@ -149,7 +150,15 @@ def main():
     )
 
     parser.add_argument(
-        'download_dir',
+        '--worker',
+        type=int,
+        default=min(32, os.cpu_count() + 4),
+        help='Number of parallel downloads',
+    )
+
+    parser.add_argument(
+        '--download_dir',
+        default='data/',
         metavar='download-dir',
         help='Download directory'
     )
@@ -167,11 +176,11 @@ def main():
         end_ts=args.end_ts,
         product=args.product,
         processing_level=args.level,
-        processing_mode=args.mode
+        # processing_mode=args.mode
     )
 
     # Download found products to the local folder
-    download(result.get('products'), args.download_dir)
+    download(result.get('products'), args.worker, args.download_dir)
 
 
 if __name__ == '__main__':

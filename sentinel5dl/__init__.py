@@ -35,7 +35,7 @@ the value is passed to CURLOPT_CAINFO. If not set,
 this option is by default set to the system path
 where libcurl's cacert bundle is assumed to be stored,
 as established at build time. If this is not already supplied
-by your operating system, certificate provides an easy way of
+by your operating system, certifi provides an easy way of
 providing a cabundle.
 '''
 
@@ -112,15 +112,17 @@ def __http_request(path, filename=None, resume=False):
             return f.getvalue()
 
 
-def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
-            limit):
+def _search(polygon, begin_ts, end_ts, product, processing_level,
+            processing_mode, offset, limit):
     """Make a single search request for products to the API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
     :param begin_ts: ISO-8601 timestamp specifying the earliest sensing date
     :param end_ts: ISO-8601 timestamp specifying the latest sensing date
     :param product: Type of product to request
-    :param processing_level: Data processing level (`L1B` or `L2`)
+    :param processing_level: Data processing level (``L1B`` or ``L2``)
+    :param processing_mode: Data processing mode (``Offline``,
+                            ``Near real time`` or ``Reprocessing``)
     :param offset: Offset for the results to return
     :param limit: Limit number of results
     :returns: Dictionary containing information about found products
@@ -131,11 +133,13 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
     if begin_ts:
         filter_query.append(f'beginPosition:[{begin_ts} TO {end_ts}]')
     if end_ts:
-        filter_query.append(f'endPosition:[{begin_ts} TO {end_ts}]', )
+        filter_query.append(f'endPosition:[{begin_ts} TO {end_ts}]',)
     if product:
         filter_query.append(f'producttype:{product}')
     if processing_level:
         filter_query.append(f'processinglevel:{processing_level}')
+    if processing_mode:
+        filter_query.append(f'processingmode:{processing_mode}')
     filter_query = ' AND '.join(filter_query)
     query = {'filter': filter_query, 'offset': offset, 'limit': limit,
              'sortedby': 'ingestiondate', 'order': 'desc'}
@@ -147,14 +151,16 @@ def _search(polygon, begin_ts, end_ts, product, processing_level, offset,
 
 
 def search(polygon=None, begin_ts=None, end_ts=None, product=None,
-           processing_level='L2', per_request_limit=25):
+           processing_level='L2', processing_mode=None, per_request_limit=25):
     """Search for products via API.
 
     :param polygon: WKT polygon specifying an area the data should intersect
-    :param begin_ts: ISO-8601 timestamp specifying the earliest sensing date
-    :param end_ts: ISO-8601 timestamp specifying the latest sensing date
+    :param begin_ts: Datetime specifying the earliest sensing date
+    :param end_ts: Datetime specifying the latest sensing date
     :param product: Type of product to request
-    :param processing_level: Data processing level (`L1B` or `L2`)
+    :param processing_level: Data processing level (``L1B`` or ``L2``)
+    :param processing_mode: Data processing mode (``Offline``,
+                            ``Near real time`` or ``Reprocessing``)
     :param per_request_limit: Limit number of results per request
     :returns: Dictionary containing information about found products
     """
@@ -165,7 +171,7 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     logger.info('Searching for Sentinel-5 products')
     while count < total:
         s = _search(polygon, begin_ts, end_ts, product, processing_level,
-                    count, per_request_limit)
+                    processing_mode, count, per_request_limit)
         total = s.get('totalresults', 0)
         if data:
             data['products'].extend(s['products'])

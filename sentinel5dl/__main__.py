@@ -153,7 +153,7 @@ def main():
         '--worker',
         type=int,
         default=min(32, os.cpu_count() + 4),
-        help='Number of parallel downloads',
+        help='Number of parallel downloads'
     )
 
     parser.add_argument(
@@ -176,7 +176,7 @@ def main():
         end_ts=args.end_ts,
         product=args.product,
         processing_level=args.level,
-        # processing_mode=args.mode
+        processing_mode=args.mode
     )
 
     # Download found products to the local folder

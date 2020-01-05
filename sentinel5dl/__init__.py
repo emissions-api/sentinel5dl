@@ -165,6 +165,15 @@ def search(polygon=None, begin_ts=None, end_ts=None, product=None,
     :returns: Dictionary containing information about found products
     """
 
+    try:
+        begin_ts = begin_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    except AttributeError:
+        pass
+    try:
+        end_ts = end_ts.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    except AttributeError:
+        pass
+
     count = 0
     total = 1
     data = None

@@ -1,17 +1,20 @@
-import os
-import logging
 import datetime
+import os
+import sentinel5dl
+import sentinel5dl.__main__ as executable
 import tempfile
 import unittest
 from unittest.mock import patch
-import sentinel5dl
+import logging
+import sys
 
 
-testpath = os.path.dirname(os.path.abspath(__file__))
+test_dir = os.path.dirname(os.path.realpath(__file__))
 
 
-def mock_http_request(path, filename=None, resume=False):
-    """Mock HTTP requests to the ESA API"""
+def _mock_http_request(path, filename=None, resume=False):
+    """Mock HTTP requests to the ESA API.
+    """
     # download
     if filename is not None:
         with open(filename, 'wb') as f:
@@ -20,7 +23,7 @@ def mock_http_request(path, filename=None, resume=False):
 
     # search request
     if path.startswith('/api/stub/products?'):
-        with open(os.path.join(testpath, 'products.json'), 'rb') as f:
+        with open(test_dir + '/products.json', 'rb') as f:
             return f.read()
 
     # checksum request
@@ -33,12 +36,12 @@ class TestSentinel5dl(unittest.TestCase):
 
     def setUp(self):
         """Patch cURL based operation in sentinel5dl so that we do not really
-        make any HTTP requests and reset the request counters."""
+        make any HTTP requests and reset the request counters.
+        """
         logging.getLogger(sentinel5dl.__name__).setLevel(logging.WARNING)
 
-    @patch('sentinel5dl.__http_request')
+    @patch('sentinel5dl.__http_request', side_effect=_mock_http_request)
     def test_search_and_download(self, mock_request):
-        mock_request.side_effect = mock_http_request
         result = sentinel5dl.search(
             polygon='POLYGON((7 49,13 49,13 52,7 52,7 49))',
             begin_ts=datetime.datetime.fromtimestamp(0),
@@ -70,3 +73,29 @@ class TestSentinel5dl(unittest.TestCase):
             # We should have downloaded four files and have an additional four
             # files storing md5 checksums
             self.assertEqual(len(os.listdir(temp_dir)), 8)
+            # We should have four checksum requests. One for each file
+            self.assertEqual(len([s for s in os.listdir(temp_dir)
+                                  if s.endswith('.md5sum')]), 4)
+            # We should have downloaded four unique files
+            self.assertEqual(len([s for s in os.listdir(temp_dir)
+                                  if s.endswith('.nc')]), 4)
+
+
+def _mock_download(products, *args):
+    assert products == []
+
+
+class TestExecutable(unittest.TestCase):
+
+    @patch.object(sys, 'argv', sys.argv[0:1] + ['.'])
+    @patch.object(executable, 'search', return_value={'products': []})
+    @patch.object(executable, 'download', side_effect=_mock_download)
+    def test_executable(self, mock_search, mock_download):
+        executable.main()
+
+        self.assertTrue(mock_search.assert_called_once)
+        self.assertTrue(mock_download.assert_called_once)
+
+
+if __name__ == '__main__':
+    unittest.main()

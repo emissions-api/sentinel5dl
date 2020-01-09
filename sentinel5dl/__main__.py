@@ -157,8 +157,7 @@ def main():
     )
 
     parser.add_argument(
-        '--download_dir',
-        default='data/',
+        'download_dir',
         metavar='download-dir',
         help='Download directory'
     )

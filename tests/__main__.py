@@ -23,7 +23,7 @@ def _mock_http_request(path, filename=None, resume=False):
 
     # search request
     if path.startswith('/api/stub/products?'):
-        with open(test_dir + '/products.json', 'rb') as f:
+        with open(os.path.join(test_dir, 'products.json'), 'rb') as f:
             return f.read()
 
     # checksum request

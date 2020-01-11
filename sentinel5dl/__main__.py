@@ -142,6 +142,18 @@ def main():
     )
 
     parser.add_argument(
+        '--limit',
+        type=int,
+        help='Limit the number of downloaded files',
+    )
+
+    parser.add_argument(
+        '--offset',
+        type=int,
+        help='Specify the offset of the first file to download',
+    )
+
+    parser.add_argument(
         '--use-certifi',
         action='store_true',
         help='''If a Certificate Authority (CA) bundle is not already supplied
@@ -178,11 +190,15 @@ def main():
         processing_mode=args.mode
     )
 
+    products = result.get('products', [])
+    products = products[args.offset:]
+    products = products[:args.limit]
+
     # Download found products to the download directory with number of workers
     with multiprocessing.Pool(args.worker) as p:
         p.starmap(download, map(
             lambda product: ((product,), args.download_dir),
-            result.get('products')))
+            products))
 
 
 if __name__ == '__main__':

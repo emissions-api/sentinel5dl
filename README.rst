@@ -14,8 +14,9 @@ Sentinel-5P Downloader
     :target: https://github.com/emissions-api/sentinel5dl/blob/master/LICENSE
     :alt: MIT license
 
-This library provides easy access to data from the European Space Agency's
-Sentinel 5P satellite.
+The sentinel5dl project consists of a library and a command line tool which provide easy access to
+`emission data products <https://sentinel.esa.int/web/sentinel/missions/sentinel-5p/data-products>`_
+originating from the European Space Agency's Sentinel-5P satellite.
 
 - `sentinel5dl on PyPI <https://pypi.org/project/sentinel5dl/>`_
 - `Documentation <https://sentinel5dl.emissions-api.org>`_
@@ -30,8 +31,8 @@ Install this library using::
     %> pip install sentinel5dl
 
 
-Quick Example
--------------
+Quick Example (Library)
+-----------------------
 
 .. code-block:: python
 
@@ -49,3 +50,23 @@ Quick Example
 
     # Download found products to the local folder
     download(result.get('products'))
+
+
+Quick Example (Binary)
+-----------------------
+
+Download carbon monoxide sensor data taken between 2019-01-08 and 2019-01-20 to
+the directory ``/data`` using eight workers (eight parallel downloads):
+
+.. code-block:: bash
+
+    sentinel5dl --worker 8 \
+                --begin-ts 2019-01-08 \
+                --end-ts 2019-01-20 \
+                /data
+
+To show all available options, run:
+
+.. code-block:: bash
+
+    sentinel5dl -h

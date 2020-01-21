@@ -13,6 +13,9 @@ Sentinel-5P Downloader
 .. image:: https://img.shields.io/github/license/emissions-api/sentinel5dl
     :target: https://github.com/emissions-api/sentinel5dl/blob/master/LICENSE
     :alt: MIT license
+.. image:: https://bestpractices.coreinfrastructure.org/projects/3631/badge
+    :target: https://bestpractices.coreinfrastructure.org/projects/3631
+    :alt: CII Best Practices
 
 This library provides easy access to data from the European Space Agency's
 Sentinel 5P satellite.

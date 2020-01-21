@@ -102,10 +102,37 @@ class TestExecutable(unittest.TestCase):
         # override sys.argv. Otherwise argparse is trying to parse it.
         sys.argv = sys.argv[0:1] + ['.']
 
-    def test(self):
+    def testNoArguments(self):
         '''Test the executable.
         '''
         executable.main()
+
+    def testPolygon(self):
+        '''Test with an invalid polygon.
+        '''
+        sys.argv = [sys.argv[0], '--polygon', '3 1, 4 4, 2 4, 1 2, 3 1', '.']
+        executable.main()
+
+    def testInvalidPolygons(self):
+        '''Tests with invalid polygons.
+        '''
+        invalid_polygons = (
+            '3 1 4 4, 2 4 1',      # coordinates must be pairs
+            '3 1, 4 4, 2 4, 1 2',  # polygon must be closed
+            'a s, d f, a s, d f',  # coordinates must be numbers
+        )
+
+        for invalid_polygon in invalid_polygons:
+            sys.argv = [sys.argv[0], '--polygon', invalid_polygon, '.']
+
+            error_msg = f'Expecting SystemExit error when providing the '\
+                'invalid polygon "{invalid_polygon}"'
+            with self.assertRaises(SystemExit, msg=error_msg) as e:
+                executable.main()
+
+            error_msg = f'Expecting return code != 0 error when providing '\
+                'the invalid polygon "{invalid_polygon}"'
+            self.assertNotEqual(e.exception.code, 0, msg=error_msg)
 
 
 if __name__ == '__main__':

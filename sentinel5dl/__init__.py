@@ -18,7 +18,7 @@ import time
 # Data publicly provided by ESA:
 API = 'https://s5phub.copernicus.eu/dhus/'
 USER = 's5pguest'
-PASS = 's5pguest'
+PASS = 's5pguest'  # nosec - okay to hardcode the public password
 
 logger = logging.getLogger(__name__)
 '''Logger used by ``sentinel5dl``. Use this to specifically modify the
@@ -46,7 +46,7 @@ def __md5(filename):
     :returns: hex representation of the md5 sum with uppercase characters.
     :rtype: str
     '''
-    hash_md5 = hashlib.md5()
+    hash_md5 = hashlib.md5()  # nosec - md5 used for file integrity by ESA
     with open(filename, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b''):
             hash_md5.update(chunk)

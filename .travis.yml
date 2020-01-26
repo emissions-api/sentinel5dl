@@ -18,8 +18,8 @@ install:
   - python setup.py install
 
 script:
-  - flake8 sentinel5dl
-  - bandit -r sentinel5dl
+  - flake8 sentinel5dl tests
+  - bandit -r sentinel5dl tests
   - coverage run --source=sentinel5dl -m tests
 
 after_success:

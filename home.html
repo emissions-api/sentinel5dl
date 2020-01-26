@@ -83,7 +83,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Sentinel-5P Downloader</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quick-example">Quick Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-example-library">Quick Example (Library)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-example-binary">Quick Example (Binary)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-sentinel5dl">Python API</a></li>
 </ul>
 </li>
@@ -160,8 +161,9 @@
 <a class="reference external image-reference" href="https://github.com/emissions-api/sentinel5dl/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/emissions-api/sentinel5dl?color=blue" /></a>
 <a class="reference external image-reference" href="https://github.com/emissions-api/sentinel5dl/blob/master/LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/emissions-api/sentinel5dl" /></a>
 <a class="reference external image-reference" href="https://bestpractices.coreinfrastructure.org/projects/3631"><img alt="CII Best Practices" src="https://bestpractices.coreinfrastructure.org/projects/3631/badge" /></a>
-<p>This library provides easy access to data from the European Space Agency’s
-Sentinel 5P satellite.</p>
+<p>The sentinel5dl project consists of a library and a command line tool which provide easy access to
+<a class="reference external" href="https://sentinel.esa.int/web/sentinel/missions/sentinel-5p/data-products">emission data products</a>
+originating from the European Space Agency’s Sentinel-5P satellite.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://pypi.org/project/sentinel5dl/">sentinel5dl on PyPI</a></p></li>
 <li><p><a class="reference external" href="https://sentinel5dl.emissions-api.org">Documentation</a></p></li>
@@ -174,8 +176,8 @@ Sentinel 5P satellite.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="quick-example">
-<h2>Quick Example<a class="headerlink" href="#quick-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="quick-example-library">
+<h2>Quick Example (Library)<a class="headerlink" href="#quick-example-library" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sentinel5dl</span> <span class="kn">import</span> <span class="n">search</span><span class="p">,</span> <span class="n">download</span>
 
 <span class="c1"># Search for Sentinel-5 products</span>
@@ -189,6 +191,21 @@ Sentinel 5P satellite.</p>
 
 <span class="c1"># Download found products to the local folder</span>
 <span class="n">download</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="quick-example-binary">
+<h2>Quick Example (Binary)<a class="headerlink" href="#quick-example-binary" title="Permalink to this headline">¶</a></h2>
+<p>Download carbon monoxide sensor data taken between 2019-01-08 and 2019-01-20 to
+the directory <code class="docutils literal notranslate"><span class="pre">/data</span></code> using eight workers (eight parallel downloads):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sentinel5dl --worker <span class="m">8</span> <span class="se">\</span>
+            --begin-ts <span class="m">2019</span>-01-08 <span class="se">\</span>
+            --end-ts <span class="m">2019</span>-01-20 <span class="se">\</span>
+            /data
+</pre></div>
+</div>
+<p>To show all available options, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sentinel5dl -h
 </pre></div>
 </div>
 </div>

@@ -1,5 +1,6 @@
 import datetime
 import os
+import pycurl
 import sentinel5dl
 import sentinel5dl.__main__ as executable
 import tempfile
@@ -39,6 +40,10 @@ class TestSentinel5dl(unittest.TestCase):
         '''Patch cURL based operation in sentinel5dl so that we do not really
         make any HTTP requests and reset the request counters.
         '''
+        if not getattr(sentinel5dl, '__original_http_request', None):
+            # save the original one
+            setattr(sentinel5dl, '__original_http_request',
+                    getattr(sentinel5dl, '__http_request'))
         setattr(sentinel5dl, '__http_request', self._mock_http_request)
         self._count_search_request = 0
         self._count_checksum_request = 0
@@ -84,6 +89,13 @@ class TestSentinel5dl(unittest.TestCase):
         self.assertEqual(self._count_checksum_request, 4)
         # We should have downloaded four unique files
         self.assertEqual(self._count_download, 4)
+
+    def testFailedRequest(self):
+        sentinel5dl.API = 'http://127.0.0.1:9'
+        request = getattr(sentinel5dl, '__original_http_request')
+        # nothing may use port 9. This should always fail
+        with self.assertRaises(pycurl.error):
+            request('/', retries=0)
 
 
 class TestExecutable(unittest.TestCase):

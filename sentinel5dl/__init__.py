@@ -122,7 +122,7 @@ def __http_request(path, filename=None, retries=9):
             raise err
         logger.warning('Retrying failed HTTP request. %s', err)
         time.sleep(1)
-        __http_request(path, filename, retries-1)
+        return __http_request(path, filename, retries-1)
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level,

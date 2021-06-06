@@ -137,13 +137,13 @@ class TestExecutable(unittest.TestCase):
         for invalid_polygon in invalid_polygons:
             sys.argv = [sys.argv[0], '--polygon', invalid_polygon, '.']
 
-            error_msg = f'Expecting SystemExit error when providing the '\
-                'invalid polygon "{invalid_polygon}"'
+            error_msg = 'Expecting SystemExit error when providing the '\
+                f'invalid polygon "{invalid_polygon}"'
             with self.assertRaises(SystemExit, msg=error_msg) as e:
                 executable.main()
 
-            error_msg = f'Expecting return code != 0 error when providing '\
-                'the invalid polygon "{invalid_polygon}"'
+            error_msg = 'Expecting return code != 0 error when providing '\
+                f'the invalid polygon "{invalid_polygon}"'
             self.assertNotEqual(e.exception.code, 0, msg=error_msg)
 
 

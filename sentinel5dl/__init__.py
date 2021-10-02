@@ -109,10 +109,11 @@ def __http_request(path, filename=None, retries=9):
             curl.perform()
             curl.close()
 
-            if filename:
-                os.rename(f'{filename}.tmp', filename)
-            else:
+            if not filename:
                 return f.getvalue()
+
+        # rename temporary file if we downloaded one
+        os.rename(f'{filename}.tmp', filename)
 
     except pycurl.error as err:
         if not retries:

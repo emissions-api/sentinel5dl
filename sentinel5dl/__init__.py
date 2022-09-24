@@ -75,7 +75,7 @@ def __check_md5(filename, base_path):
     return __md5(filename) == md5sum
 
 
-def __http_request(path, filename=None, retries=9):
+def __http_request(path, filename=None, headers=[], retries=9):
     '''Make an HTTP request to the API via HTTP, optionally downloading the
     response.
 
@@ -83,6 +83,7 @@ def __http_request(path, filename=None, retries=9):
     :param filename: Optional output file name. Note that this file will be
                      overwritten if it already exists. If no filename is
                      provided, the response will be returned.
+    :param headers: List of additional headers to sent with the request.
     :param retries: Number of times the request should be repeated if an error
                     occurred with that request (e.g. a network timeout)
     :returns: The response body or None if a filename is provided.
@@ -97,6 +98,9 @@ def __http_request(path, filename=None, retries=9):
             curl.setopt(curl.USERPWD, f'{USER}:{PASS}')
             curl.setopt(curl.WRITEDATA, f)
             curl.setopt(curl.FAILONERROR, True)
+
+            if headers:
+                curl.setopt(pycurl.HTTPHEADER, headers)
 
             # Use a Certificate Authority (CA) bundle if set
             if ca_info:
@@ -123,7 +127,7 @@ def __http_request(path, filename=None, retries=9):
             raise err
         logger.warning('Retrying failed HTTP request. %s', err)
         time.sleep(1)
-        return __http_request(path, filename, retries-1)
+        return __http_request(path, filename, headers, retries-1)
 
 
 def _search(polygon, begin_ts, end_ts, product, processing_level,
@@ -160,7 +164,7 @@ def _search(polygon, begin_ts, end_ts, product, processing_level,
     query = urllib.parse.urlencode(query, safe='():,\\[]',
                                    quote_via=urllib.parse.quote)
     path = '/api/stub/products?' + query
-    body = __http_request(path)
+    body = __http_request(path, headers=['Accept: application/json'])
     return json.loads(body.decode('utf8'))
 
 

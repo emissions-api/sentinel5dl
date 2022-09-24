@@ -14,7 +14,7 @@ testpath = os.path.dirname(os.path.abspath(__file__))
 
 class TestSentinel5dl(unittest.TestCase):
 
-    def _mock_http_request(self, path, filename=None):
+    def _mock_http_request(self, path, filename=None, headers=[]):
         '''Mock HTTP requests to the ESA API
         '''
         # download
